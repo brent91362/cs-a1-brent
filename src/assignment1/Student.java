@@ -3,7 +3,10 @@ package assignment1;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-
+/*
+ * student has an id and answer. answer can be set be student
+ * or randomly generated
+ */
 public class Student {
 	private long students;
 	private ArrayList<Character> answers;

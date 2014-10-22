@@ -7,13 +7,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.StringTokenizer;
-
+/*
+ * Sets the questions and answers by file or user input
+ */
 public class Questions {
-	private ArrayList<node> QA = new ArrayList<node>();
-	class node{
+	private ArrayList<state> QA = new ArrayList<state>();
+	/*
+	 * state has a question and answer
+	 */
+	class state{
 		private String question;
 		private ArrayList<Character> answers;
-		public node(String questions, ArrayList<Character> answers){
+		public state(String questions, ArrayList<Character> answers){
 			this.question=questions;
 			this.answers=answers;
 		}public String getQuestion(){
@@ -26,7 +31,7 @@ public class Questions {
 		private String filename = "QAs.txt";
 		public void add(String question, ArrayList<Character> answers){
 			if(question!=null&&answers!=null){
-				QA.add(new node(question, answers));
+				QA.add(new state(question, answers));
 				try
 				{
 				    FileWriter fw = new FileWriter(filename,true); 
@@ -40,23 +45,27 @@ public class Questions {
 			}
 		}
 		
-	@SuppressWarnings({ "unused", "null" })
+	@SuppressWarnings({ "unused" })
 	public Questions(){
 		String q=null, a=null;
 		BufferedReader br;
 		try{
-			br = new BufferedReader(new FileReader("questions.txt"));
-			while (notAsked(br.readLine())) {
-				q = br.readLine();
+			br = new BufferedReader(new FileReader(filename));
+			q = br.readLine();
+			while (notAsked(q)&&!(q==null)) {
 				a = br.readLine();
 				StringTokenizer st = new StringTokenizer(a);
-				ArrayList<Character> answers = null;
+				ArrayList<Character> answers = new ArrayList<Character>();
 				int index=0;
 				while(st.hasMoreTokens()){
-					answers.add(st.nextToken().charAt(0));
+
+					StringTokenizer st2 = 
+							new StringTokenizer(st.nextToken(), "[],");
+					answers.add(st2.nextToken().charAt(0));
 				}
 				if(q!=null && answers!=null){
-				QA.add(new node(q, answers));}
+				QA.add(new state(q, answers));}
+				q=br.readLine();
 			}
 		}
 		catch (IOException e){
@@ -69,8 +78,8 @@ public class Questions {
 		}
 		return true;
 	}
-	public node getARandQ(){
-		node q=null;
+	public state getARandQ(){
+		state q=null;
 		Random rn = new Random(System.currentTimeMillis());
 		q=QA.get(rn.nextInt(QA.size()));
 		return q;
